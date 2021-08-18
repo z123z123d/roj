@@ -1172,6 +1172,9 @@ RunCompilerResult compile_java8(const string &name, const string &path = work_pa
 	return run_compiler((path + "/" + name).c_str(),
 			"/usr/lib/jvm/java-8-openjdk-amd64/bin/javac", (main_class + ".java").c_str(), NULL);
 }
+RunCompilerResult compile_r(const string &name, const string &path = work_path) {
+	return run_compiler(path.c_str(), "sed", (name + ".code").c_str(), "-e", "1i\\\\!\\#/usr/bin/Rscript", (">" + name).c_str(), NULL);
+}
 RunCompilerResult compile_java11(const string &name, const string &path = work_path) {
 	RunCompilerResult ret = prepare_java_source(name, path);
 	if (!ret.succeeded)
@@ -1223,6 +1226,9 @@ RunCompilerResult compile(const char *name)  {
 	}
 	if (lang == "Pascal") {
 		return compile_pas(name);
+	}
+	if (lang == "R") {
+		return compile_r(name);
 	}
 
 	RunCompilerResult res = RunCompilerResult::failed_result();
